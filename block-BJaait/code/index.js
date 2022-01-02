@@ -1,85 +1,88 @@
-let box = document.querySelector(".box");
-let container = document.querySelector(".container");
-let data = [
-    {title: "Globe", icon: `<i class="fas fa-globe-asia"></i>` },
-    {title: "Heart", icon: `<i class="far fa-heart"></i>` },
-    {title: "Chess", icon: `<i class="fas fa-chess"></i>` },
-    {title: "Desktop", icon: `<i class="fas fa-desktop"></i>` },
-    {title: "Rupee", icon: `<i class="fas fa-rupee-sign"></i>` },
-    {title: "Apple", icon: `<i class="fas fa-apple-alt"></i>` },
-    {title: "Star", icon: `<i class="far fa-star"></i>` },
-    {title: "Cat", icon: `<i class="fas fa-cat"></i>` },
-]
+var btn = document.querySelector('.add');
+var remove = document.querySelector('.draggable');
+var ul = document.querySelector('ul');
 
-document.addEventListener('DOMContentLoaded', (event)=> {
+let data = JSON.parse(localStorage.getItem("todo")) || [];
 
-    function handleDragStart(event) {
-        this.style.opacity = "0.4";
 
-        dragSrcEl = this;
+function dragStart(e) {
+  this.style.opacity = '0.4';
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+};
 
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/html', this.innerHTML);
-        return false;
-    }
-    
-    
-    function handleDragEnd(event) {
-        this.style.opacity = "1";
+function dragEnter(e) {
+  this.classList.add('over');
+}
 
-        let allBox = document.querySelectorAll(".box")
-        allBox.forEach((box)=> {
-            let value = box.className;
-            if(value.includes("over")){
-                box.classList.remove("over")
-            }
-        })
-    }
+function dragLeave(e) {
+  e.stopPropagation();
+  this.classList.remove('over');
+}
 
-    function handleDragOver(event) {
-        if(event.preventDefault){
-            event.preventDefault();
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function dragDrop(e) {
+  if (dragSrcEl != this) {
+    dragSrcEl.innerHTML = this.innerHTML;
+    this.innerHTML = e.dataTransfer.getData('text/html');
+  }
+  return false;
+}
+
+function dragEnd(e) {
+  var listItems = document.querySelectorAll('.draggable');
+
+    listItems.forEach((item)=> {
+        if(item.className.includes("over")) {
+            item.classList.remove('over');
         }
-        return false;
-    }
+    })
 
-    function handleDragEnter(event) {
-        this.classList.add("over");
-    }
-    
-    function handleDragLeave(event) {
-        this.classList.remove("over");
-    }
+  this.style.opacity = '1';
+}
 
-    function handleDrop(event) {
-        event.stopPropagation();
+function updateUI(item = data) {
+    localStorage.setItem("todo", JSON.stringify(item));
+    createUI();
+}
 
-        if (dragSrcEl !== this) {
-            dragSrcEl.innerHTML = this.innerHTML;
-            this.innerHTML = event.dataTransfer.getData('text/html');
-        }
-        
-        return false;
-    }
+function createUI() {
 
+    ul.innerHTML = "";
     let fragment = new DocumentFragment;
 
     data.forEach((elm)=> {
-    
-        let div = document.createElement("div");
-        div.classList.add("box");
-        div.draggable="true";
-        div.innerHTML = elm.icon;
-    
-    
-        div.addEventListener("dragstart", handleDragStart);
-        div.addEventListener("dragend", handleDragEnd);
-        div.addEventListener("dragover", handleDragOver);
-        div.addEventListener("dragenter", handleDragEnter);
-        div.addEventListener("dragleave", handleDragLeave);
-        div.addEventListener("drop", handleDrop);
-        fragment.append(div);
+        var li = document.createElement('li');
+        li.draggable = true;
+        li.className = 'draggable';
+        li.innerText = elm.todo;
+
+        li.addEventListener('dragstart', dragStart, false);
+        li.addEventListener('dragenter', dragEnter, false);
+        li.addEventListener('dragover', dragOver, false);
+        li.addEventListener('dragleave', dragLeave, false);
+        li.addEventListener('drop', dragDrop, false);
+        li.addEventListener('dragend', dragEnd, false);
+
+        fragment.append(li);
     })
-    
-    container.append(fragment);
-})
+    ul.append(fragment);
+}
+
+function addNewItem() {
+  var newItem = document.querySelector('.input').value;
+  if (newItem != '') {
+    document.querySelector('.input').value = '';
+    data.push({todo:newItem});
+    updateUI();
+  }
+}
+
+btn.addEventListener('click', addNewItem);
+updateUI();
