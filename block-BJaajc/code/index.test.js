@@ -39,12 +39,6 @@ test("isPalindrome 121 to equal 121", () => {
 test("isPalindrome 43534 to equal 43534", () => {
   expect(isPalindrome(43534)).toBe(true);
 });
-test("isPalindrome 10001 to equal 10001", () => {
-  expect(isPalindrome(10001)).toBe(true);
-});
-test("isPalindrome 555 to equal 555", () => {
-  expect(isPalindrome(555)).toBe(true);
-});
 
 // Negaitive  isPalindrome
 
@@ -56,12 +50,6 @@ test("isPalindrome 1991 to equal 1991", () => {
 });
 test("isPalindrome 141 to equal 141", () => {
   expect(isPalindrome(141)).not.toBe(false);
-});
-test("isPalindrome 12321 to equal 12321", () => {
-  expect(isPalindrome(12321)).not.toBe(false);
-});
-test("isPalindrome 23432 to equal 23432", () => {
-  expect(isPalindrome(23432)).not.toBe(false);
 });
 
 // Getcircumstance positive
