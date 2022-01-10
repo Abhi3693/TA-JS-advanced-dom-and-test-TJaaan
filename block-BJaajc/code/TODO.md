@@ -6,7 +6,7 @@ Write the function in `index.js` file and also write the test in `index.test.js`
 - Negative Test verifies expected behavior with invalid data.
 - Edge Case is a subset of positive tests, which checks the extreme edges of valid values.
 
-1. Write a function named `getFullName` that accepts two input `firstName` and `lastName` and return the `fullName`
+1. Write a function named `getFullName` that accepts two input `firstName` and `lastName` and return the `fullName`.
 
 2. Write a function named `isPalindrome` that accepts one input returns `true` or `false` based on wether the value passed is palindrome or not.
 
